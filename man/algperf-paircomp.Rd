@@ -2,7 +2,7 @@
 \alias{paircomp}
 \title{Pairwise comparison of algorithm performances...}
 \usage{paircomp(x, family, type=c("<", "="), ...)
-\method{as.relation}{PaircompDecision}(x, verbose=TRUE, ...)
+\method{as.relation}{PaircompDecision}(x, verbose=FALSE, ...)
 relation_is_strict_weak_order(x)
 }
 \description{Pairwise comparison of algorithm performances}

@@ -19,7 +19,7 @@ a model formula and a data.frame to fit a model. Note that a
 functions with arguments \code{yhat} and \code{y}. See, e.g.,
 \code{\link{benchmark-comptime}}.}
 \item{characteristics}{\code{\link{DatasetCharacteristics}} object}
-\item{test}{\code{\link{Test}} object}
+\item{test}{\code{\link{TestProcedure}} object}
 \item{verbose}{Show information during execution}
 }
 

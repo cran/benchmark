@@ -1,0 +1,18 @@
+
+
+
+publication("archetypes",
+            citation = "archetypes",
+            pubVignette("archetypes"))
+
+
+publication("robust-atypes",
+            citation = "robatypes",
+            pubDemo("robust-ozone"),
+            pubDemo("robust-toy"))
+
+
+publication("ibenchplot",
+            citation = "ibenchplot",
+
+            

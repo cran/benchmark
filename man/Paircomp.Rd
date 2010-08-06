@@ -23,7 +23,7 @@ point estimates.
 \alias{PointPaircomp}
 \references{See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
 in \code{citation("benchmark")}.}
-\seealso{\code{\link{Test}}}
+\seealso{\code{\link{TestProcedure}}}
 \alias{FriedmanTestPaircomp}
 \alias{LmerTestPaircomp}
 \alias{PercintTestPaircomp}
