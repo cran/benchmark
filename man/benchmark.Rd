@@ -2,7 +2,7 @@
 \alias{benchmark}
 \title{Benchmark experiment execution}
 \usage{benchmark(datasets, sampling, algorithms, performances, characteristics, test,
-    verbose=TRUE)
+    test.burnin=3, verbose=TRUE)
 }
 \description{Function to execute benchmark experiments and collect all data the
 package can analyze. For more sophisticated benchmark experiments
@@ -20,6 +20,7 @@ functions with arguments \code{yhat} and \code{y}. See, e.g.,
 \code{\link{benchmark-comptime}}.}
 \item{characteristics}{\code{\link{DatasetCharacteristics}} object}
 \item{test}{\code{\link{TestProcedure}} object}
+\item{test.burnin}{Number of burn-in replications}
 \item{verbose}{Show information during execution}
 }
 

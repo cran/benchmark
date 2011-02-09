@@ -1,15 +1,19 @@
-\name{monks3raw}
+\name{uci621raw}
 \docType{data}
-\alias{monks3raw}
-\title{monks3 benchmark experiment results}
+\alias{uci621raw}
+\alias{uci621rel}
+\title{uci621 benchmark experiment results}
 \description{
 Misclassification error and computation time on the data set
-\code{monks3} of the candidate algorithms \code{lda}, \code{rf},
-\code{knn}, \code{rpart}, \code{svm} and \code{nnet}.
+21 UCI Machine Learning Repository data sets of the candidate algorithms
+\code{lda}, \code{rf}, \code{knn}, \code{rpart}, \code{svm} and
+\code{nnet}.
 
-Used in \code{demo("benchplot")}.
+\code{uci621rel} are precomputed relations.
+
+Used in \code{demo("lsbenchplot-cs621")}.
 }
-\usage{monks3raw}
+\usage{uci621raw}
 \format{An array of dimension 250 x 6 x 2 x 1 (sampling x algorithms x
   performances x data sets).}
 \references{
