@@ -4,45 +4,34 @@
 
 
 #' Return subsets of \code{AlgorithmPerformance} objects
+#'
 #' @param x An \code{\link{AlgorithmPerformance}} object
-#' @param datasets Selected datasets
-#' @param algorithms Selected algorithms
-#' @param performances Selected performances
-#' @param samples Selected samples
-#' @param ... Ignored
+#' @param subset Logical expression indicating rows to keep
+#' @param ... Passed to the underlying \code{\link{subset.data.frame}}
+#'   call
+#'
 #' @return An \code{\link{AlgorithmPerformance}} object with just the
 #'   selected observations
+#'
 #' @method subset AlgorithmPerformance
+#'
 #' @S3method subset AlgorithmPerformance
-subset.AlgorithmPerformance <- function(x, datasets = NULL,
-                                        algorithms = NULL,
-                                        performances = NULL,
-                                        samples = NULL, ...) {
+subset.AlgorithmPerformance <- function(x, subset,  ...) {
+  e <- substitute(subset)
+  r <- eval(e, x, parent.frame())
+  if (!is.logical(r))
+    stop("'subset' must evaluate to logical")
+  r <- r & !is.na(r)
 
-  if ( is.null(datasets) )
-    datasets <- levels(x$datasets)
+  y <- x[r, ]
+  y$datasets <- y$datasets[, drop = TRUE]
+  y$algorithms <- y$algorithms[, drop = TRUE]
+  y$performances <- y$performances[, drop = TRUE]
+  y$samples <- y$samples[, drop = TRUE]
 
-  if ( is.null(algorithms) )
-    algorithms <- levels(x$algorithms)
+  attr(y, "algorithm_colors") <- attr(x, "algorithm_colors")
+  attr(y, "class") <- attr(x, "class")
 
-  if ( is.null(performances) )
-    performances <- levels(x$performances)
-
-  if ( is.null(samples) )
-    samples <- levels(x$samples)
-
-
-  idx <- x$datasets %in% datasets &
-         x$algorithms %in% algorithms &
-         x$performances %in% performances &
-         x$samples %in% samples
-
-  x <- x[idx, ]
-  x$datasets <- x$datasets[, drop = TRUE]
-  x$algorithms <- x$algorithms[, drop = TRUE]
-  x$performances <- x$performances[, drop = TRUE]
-  x$samples <- x$samples[, drop = TRUE]
-
-  x
+  y
 }
 

@@ -1,6 +1,8 @@
 
 
 
+#' Visualization of dataset characteristics
+#'
 #' @param x A \code{\link{DatasetCharacterization}} object
 #' @param y Ignored
 #' @param lines Draw observation dependency lines
@@ -10,18 +12,20 @@
 #' @param basis Draw basis characterization of the dataset
 #' @param basis.col Color of basis characterization
 #' @param ... Ignored
+#'
 #' @return A \code{\link[ggplot2]{ggplot}} object.
+#'
 #' @method plot DatasetCharacterization
+#'
+#' @family dataset-characterization
+#'
 #' @rdname datachar-visualization
+#'
 #' @importFrom graphics plot
 #' @S3method plot DatasetCharacterization
 plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRUE,
                                          null.line = TRUE, null.line.col = gray(0.7),
                                          basis = TRUE, basis.col = NULL, ...) {
-
-  ## Make codetools (R CMD check) happy:
-  characteristics <- value <- datasets <- samples <- NULL
-
 
   stopifnot(nlevels(x$datasets[, drop = TRUE]) == 1)
 
@@ -59,12 +63,6 @@ plot.DatasetCharacterization <- function(x, y = NULL, lines = TRUE, points = TRU
            theme_update(axis.text.x = theme_text(angle = 90, hjust = 1))
 
   p
-}
-
-
-
-plot.DatasetBasisCharacterization <- function(x, y) {
-
 }
 
 

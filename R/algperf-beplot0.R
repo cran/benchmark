@@ -1,16 +1,7 @@
 
 
-#' @param x An object
-#' @param ... Additional arguments
-#' @rdname benchmark-generics
-#' @export
-beplot0 <- function(x, ...) {
-  UseMethod("beplot0")
-}
 
-
-
-#' Benchmark experiment plot.
+#' Benchmark experiment plot
 #'
 #' The benchmark experiment plot visualizes each benchmark
 #' experiment run. The x-axis is a podium with as many places
@@ -20,7 +11,15 @@ beplot0 <- function(x, ...) {
 #' an algorithm on a specific position, a bar plot is shown for
 #' each of podium places.
 #'
-#' @param x A \code{\link[=warehouse]{AlgorithmPerformance}} object
+#' @export
+beplot0 <- function(x, ...) {
+  UseMethod("beplot0")
+}
+
+
+
+#' @param x A matrix or \code{\link[=warehouse]{AlgorithmPerformance}}
+#'   object
 #' @param xlab A title for the x axis
 #' @param ylab A title for the y axis
 #' @param lines.show Connect dots of same benchmark runs
@@ -33,12 +32,20 @@ beplot0 <- function(x, ...) {
 #' @param places.col Color of separator line between podium places
 #' @param legendfn Function which draws a legend
 #' @param ... Ignored
-#' @return Return value of underlying \code{beplot0.matrix}
+#'
+#' @return Return value of underlying \code{beplot0.matrix}; currently
+#'   undefined
+#'
 #' @method beplot0 AlgorithmPerformance
+#'
+#' @family algperf-visualization
+#'
 #' @references
 #'   See \emph{Eugster and Leisch (2008)} and \emph{Eugster et al. (2008)}
 #'   in \code{citation("benchmark")}.
+#'
 #' @rdname beplot0
+#'
 #' @S3method beplot0 AlgorithmPerformance
 beplot0.AlgorithmPerformance <- function(x, xlab = NULL, ylab = NULL,
                                          lines.show = FALSE, lines.alpha = 0.2,
@@ -72,21 +79,7 @@ beplot0.AlgorithmPerformance <- function(x, xlab = NULL, ylab = NULL,
 
 
 
-#' @param x A matrix (row/column = observations/algorithms)
-#' @param col Dot colors
-#' @param xlab A title for the x axis
-#' @param ylab A title for the y axis
-#' @param lines.show Connect dots of same benchmark runs
-#' @param lines.col Line color
-#' @param lines.alpha Alpha value of the line color
-#' @param lines.lwd Line width
-#' @param dots.pch Dot symbol
-#' @param dots.cex Dot symbol expansion
-#' @param places.lty Type of separator line between podium places
-#' @param places.col Color of separator line between podium places
-#' @param legendfn Function which draws a legend
-#' @param ... Ignored
-#' @return Undefined
+#' @param col Colors
 #' @method beplot0 matrix
 #' @rdname beplot0
 #' @S3method beplot0 matrix
@@ -105,12 +98,12 @@ beplot0.matrix <- function(x, col = 1:ncol(x),
 
 
   # Medals table (see table.becp):
-  ranks <- t(apply(x, 1, rank, ties='random'))
+  ranks <- t(apply(x, 1, rank, ties.method='random'))
   nranks <- apply(ranks, 2, function(y)table(factor(y, levels=1:nalgs)))
 
   # Simple rank based global algorithm order
   # (see as.ranking.medalstable):
-  barranks <- rank(colSums(x * (nalgs:1)/nalgs), ties='random')
+  barranks <- rank(colSums(x * (nalgs:1)/nalgs), ties.method='random')
   barorder <- order(barranks)
 
 
@@ -133,7 +126,7 @@ beplot0.matrix <- function(x, col = 1:ncol(x),
 
   ## Draw it:
   opar <- par(no.readonly = TRUE)
-  layout(matrix(c(1,2), nrow=2, byrow=TRUE), height=c(1,0.4))
+  layout(matrix(c(1,2), nrow=2, byrow=TRUE), heights=c(1,0.4))
   mar <- par('mar')
 
   # Figure 1:

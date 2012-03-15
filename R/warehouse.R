@@ -3,18 +3,27 @@
 
 
 
-#' Benchmark experiment warehouse.
+#' Benchmark experiment warehouse
 #'
 #' \code{warehouse} is the constructor function for a benchmark experiment
 #' warehouse.
 #'
-#' A benchmark experiment warehouse collects all data during a benchmark
-#' experiment (\code{\link{benchmark}} is a proof-of-concept implementation).
-#' Different views (based on the collected data) provide cleaned parts
-#' of the data for further analyses.
+#' @param datasets Names of the datasets
+#' @param B Number of benchmark runs
+#' @param algorithms Names of the candidate algorithms
+#' @param performances Names of the performance measures
+#' @param characteristics Names of the dataset characteristics
+#' @param tests Names of the monitored test measures
+#' @return Proto object with different views (see Details).
 #'
-#' Implemented views:
-#' \enumerate{
+#' @details
+#'   A benchmark experiment warehouse collects all data during the
+#'   execution of a benchmark experiment; see \code{\link{benchmark}}.
+#'   Different views (based on the collected data) provide cleaned
+#'   parts of the data for further analyses.
+#'
+#'   Implemented views:
+#'   \enumerate{
 #'   \item \code{viewAlgorithmPerformance()}: returns a data frame (S3
 #'   class \code{AlgorithmPerformance}) with columns \code{samples,
 #'   datasets, algorithms, performances} (factors with the corresponding
@@ -31,18 +40,13 @@
 #'
 #'   \item \code{viewTestResult()}: returns a data frame (S3 class
 #'   \code{TestResult}) with columns \code{samples, datasets, tests, value}.
-#' }
+#'   }
 #'
-#' @param datasets Names of the datasets
-#' @param B Number of benchmark runs
-#' @param algorithms Names of the candidate algorithms
-#' @param performances Names of the performance measures
-#' @param characteristics Names of the dataset characteristics
-#' @param tests Names of the monitored test measures
-#' @return Proto object with different views (see Details).
 #' @seealso \code{\link{benchmark}}, \code{\link{as.warehouse}}
+#'
 #' @aliases AlgorithmPerformance DatasetCharacterization
 #'   DatasetBasisCharacterization TestResult
+#'
 #' @export
 warehouse <- function(datasets, B,
                       algorithms = NULL,
@@ -88,6 +92,25 @@ warehouse <- function(datasets, B,
 
 
   structure(a, class = c("warehouse", class(a)))
+}
+
+
+
+#' @S3method print warehouse
+print.warehouse <- function(x, ...) {
+  out <- matrix(NA_character_, nrow = 2, ncol = 2)
+  out[1, ] <- c("Algorithms", paste(x$meta$algorithms, collapse = ", "))
+  out[2, ] <- c("Datasets", paste(x$meta$datasets, collapse = ", "))
+
+  out2 <- x$meta[4:6]
+  out2 <- !sapply(out2, is.null)
+
+  cat("Warehouse object\n")
+  writeLines(formatDL(out, style = "list"))
+  cat("Data:\n")
+  print(out2)
+
+  invisible(x)
 }
 
 

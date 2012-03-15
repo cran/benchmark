@@ -3,9 +3,11 @@
 
 
 
-#' Function to execute benchmark experiments and collect all data the
-#' package can analyze. For more sophisticated benchmark experiments
-#' we suggest the usage of the \code{mlr} package.
+#' Benchmark experiment setup and execution
+#'
+#' Function to execute benchmark experiments and to collect all data
+#' the package can analyze. For more sophisticated benchmark
+#' experiments we suggest the usage of the \code{mlr} package.
 #'
 #' @param datasets List of data.frames
 #' @param sampling Sampling function, see \code{\link{benchmark-sampling}}.
@@ -15,14 +17,18 @@
 #' @param performances List of performance measure functions; i.e.,
 #'   functions with arguments \code{yhat} and \code{y}. See, e.g.,
 #'   \code{\link{benchmark-comptime}}.
-#' @param characteristics \code{\link{DatasetCharacteristics}} object
+#' @param characteristics \code{DatasetCharacteristics} object; e.g.,
+#'   \code{\link{StatlogCharacteristics}}
 #' @param test \code{\link{TestProcedure}} object
 #' @param test.burnin Number of burn-in replications
 #' @param verbose Show information during execution
+#'
 #' @return A \code{\link{warehouse}} object
+#'
 #' @seealso \code{\link{warehouse}}, \code{\link{as.warehouse}},
-#'   \code{\link{benchmark-sampling}}, \code{\link{benchmark-comptime}}
-#' @title Benchmark experiment execution
+#'   \code{\link{benchmark-sampling}},
+#'   \code{\link{benchmark-comptime}}
+#'
 #' @export
 benchmark <- function(datasets, sampling, algorithms = NULL,
                       performances = NULL, characteristics = NULL,
@@ -85,6 +91,10 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 
   ## Loop:
+  printMsg(sprintf('Benchmark experiment start: %s\n',
+                   Sys.time()), verbose = verbose)
+
+
   for ( m in seq(along = datasets) ) {
     printMsg(sprintf('m = %s\n', m), verbose = verbose)
 
@@ -97,20 +107,19 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 
     for ( b in seq(length = B) ) {
-      printMsg(sprintf('  b = %s\n', b), verbose = verbose)
+      printMsg('*', verbose = verbose, b = b)
 
 
-      if ( doCharacterization )
+      if ( doCharacterization ) {
         warehouse$data[[m]]$DatasetCharacterization[b, ] <-
             characterize(datasets[[m]],
                          characteristics,
                          index = samples$L[[b]])
+      }
 
 
       if ( doAlgorithmPerformances ) {
         for ( k in seq(along = algorithms) ) {
-          printMsg(sprintf('    k = %s\n', k), verbose = verbose)
-
           ftime <- system.time(
             fit <- algorithms[[k]](as.formula(datasets[[m]]$formula()),
                                    data = datasets[[m]]$data(index = samples$L[[b]])))
@@ -120,8 +129,6 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
                             newdata = datasets[[m]]$input(index = samples$T[[b]])))
 
           for ( p in seq(along = performances ) ) {
-            printMsg(sprintf('      p = %s\n', p), verbose = verbose)
-
             warehouse$data[[m]]$AlgorithmPerformance[b, k, p] <-
                 performances[[p]](pred,
                                   datasets[[m]]$response(index = samples$T[[b]])[[1]])
@@ -130,8 +137,6 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
         }
 
         if ( doTest & b > test.burnin ) {
-          printMsg(sprintf('    test\n'), verbose = verbose)
-
           accdat <- warehouse$viewAlgorithmPerformance(dataset = m)
           accdat <- na.omit(accdat)
           accdat$samples <- accdat$samples[, drop = TRUE]
@@ -147,6 +152,10 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
   }
 
 
+  printMsg(sprintf('Benchmark experiment end: %s\n',
+                   Sys.time()), verbose = verbose)
+
+
   warehouse
 }
 
@@ -154,13 +163,13 @@ benchmark <- function(datasets, sampling, algorithms = NULL,
 
 ### Sampling functions: ##############################################
 
-#' Sampling functions.
+#' Sampling functions
 #'
 #' Functions to create a set of learning and test samples using a specific
 #' resampling method.
 #'
 #' @param B Number of learning samples
-#' @return List with bootstrap learning and test samples
+#' @return List with corresponding learning and test samples
 #' @seealso \code{\link{benchmark}}
 #' @rdname benchmark-sampling
 #' @aliases benchmark-sampling
@@ -177,9 +186,7 @@ bs.sampling <- function(B) {
 
 
 
-#' @param B Number of learning samples
 #' @param psize Size of subsample
-#' @return List with subsampling learning and test samples
 #' @rdname benchmark-sampling
 #' @export
 sub.sampling <- function(B, psize) {
@@ -196,7 +203,6 @@ sub.sampling <- function(B, psize) {
 
 
 #' @param k Number of cross-validation samples
-#' @return List with cross-validation learning and test samples
 #' @rdname benchmark-sampling
 #' @export
 cv.sampling <- function(k) {
@@ -213,13 +219,19 @@ cv.sampling <- function(k) {
 
 ### Dummy time performance functions: ################################
 
+#' Performance measures
+#'
 #' Dummy functions to enable fitting and prediction time as performance
 #' measures.
 #'
 #' @param yhat Ignored
 #' @param y Ignored
-#' @return Time (User and System) used for the model fitting
+#'
+#' @return Time (User and System) used for the model fitting or
+#'   prediction
+#'
 #' @seealso \code{\link{benchmark}}
+#'
 #' @rdname benchmark-comptime
 #' @aliases benchmark-comptime
 #' @export
@@ -230,9 +242,6 @@ fittime <- function(yhat, y) {
 
 
 
-#' @param yhat Ignored
-#' @param y Ignored
-#' @return Time (User and System) used for the prediction
 #' @rdname benchmark-comptime
 #' @export
 predicttime <- function(yhat, y) {
@@ -244,9 +253,14 @@ predicttime <- function(yhat, y) {
 
 ### Internal functions: ##############################################
 
-printMsg <- function(x = "", newline = FALSE, verbose = TRUE) {
-  if ( verbose )
+printMsg <- function(x = "", newline = FALSE, verbose = TRUE, b = NULL) {
+  if ( verbose ) {
+    if ( !is.null(b) )
+      if ( b %% 10 == 0 )
+        newline <- TRUE
+
     cat(sprintf("%s%s", x, ifelse(newline, "\n", "")))
+  }
 }
 
 
