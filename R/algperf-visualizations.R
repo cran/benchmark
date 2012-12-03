@@ -1,5 +1,4 @@
 
-
 #' Common visualizations of algorithm performances
 #'
 #' @param x An \code{\link{AlgorithmPerformance}} object
@@ -39,7 +38,7 @@ boxplot.AlgorithmPerformance <- function(x, order.by = median, order.performance
   if ( dependence.show == "outliers" ) {
     # HACK: currently I don't know how to do that ggplot2-like.
     o <- unique(unlist(lapply(split(x$value, x$algorithms), which.outlier)))
-    ox <- x[x$samples %in% o, ]
+    ox <- x[x$sample %in% x$samples[o], ]
 
     p <- p + geom_line(aes(group = samples), data = ox, colour = dependence.col)
   }
@@ -112,7 +111,8 @@ order.algorithms.by <- function(x, order.by, order.performance) {
 
   order.by <- match.fun(order.by)
 
-  x <- subset(x, performances == order.performance)
+  #x <- subset(x, performances == order.performance)
+  x <- x[x$performances == order.performance, ]
   x <- na.omit(x)
 
   o <- order(sapply(split(x$value, x$algorithms), order.by))
