@@ -1,19 +1,18 @@
 Package: benchmark
 Type: Package
 Title: Benchmark Experiments Toolbox
-Version: 0.3-5
-Date: 2012-12-03
+Version: 0.3-6
+Date: 2014-05-02
 Authors@R: c(person("Manuel", "J. A. Eugster", role = c("aut", "cre"),
-        email = "manuel.eugster@stat.uni-muenchen.de"))
-Depends: R (>= 2.10), utils, proto, ggplot2, reshape, relations,
-        psychotools, scales
+    email = "manuel@mjae.net"))
+Depends: R (>= 2.10), utils, proto, ggplot2, relations, psychotools
+Imports: reshape, scales, plyr
 Suggests: coin, multcomp, lme4, e1071, entropy, archetypes, Rgraphviz,
         psychotree
-Description: The benchmark package provides a toolbox for setup,
-        execution and analysis of benchmark experiments. Main focus is
-        the analysis of data accumulating during the execution -- one
-        primary objective is the statistical correct computation of the
-        candidate algorithms' order.
+Description: The benchmark package provides a toolbox for setup, execution
+    and analysis of benchmark experiments. Main focus is the analysis of
+    data accumulating during the execution -- one primary objective is the
+    statistical correct computation of the candidate algorithms' order.
 License: GPL (>= 2)
 URL: http://benchmark.r-forge.r-project.org/
 Collate: 'algperf-beplot0.R' 'testprocedure.R' 'proto.R'
@@ -24,8 +23,9 @@ Collate: 'algperf-beplot0.R' 'testprocedure.R' 'proto.R'
         'dataset-characteristics.R' 'dataset.R'
         'dataset-characterization.R' 'testres-analysis.R'
         'testres-visualizations.R'
-Packaged: 2012-12-03 10:46:36 UTC; eugstem1
+Packaged: 2014-05-02 19:33:37 UTC; eugstem1
 Author: Manuel J. A. Eugster [aut, cre]
-Maintainer: Manuel J. A. Eugster <manuel.eugster@stat.uni-muenchen.de>
+Maintainer: Manuel J. A. Eugster <manuel@mjae.net>
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2012-12-03 12:08:07
+Date/Publication: 2014-05-02 21:48:47
